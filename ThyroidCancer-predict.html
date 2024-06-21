@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Recurrence Prediction</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .form-card {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+            height: 100%;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-row {
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .form-group {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .form-check-label {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-check {
+            padding-left: 1.25rem;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .card-item {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .card-item {
+                flex: 1 1 100%;
+            }
+        }
+        
+        .text-recurred {
+            color: red;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .text-not-recurred {
+            color: green;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Cancer Recurrence Prediction</h2>
+        <form id="predictionForm">
+            <div class="card-container">
+                <!-- Card 1 -->
+                <div class="card-item form-card">
+                    <div class="form-row">
+                        <!-- Age -->
+                        <div class="form-group col-md-6">
+                            <label for="age">Age:</label>
+                            <input type="number" class="form-control" id="age" name="age" value="47">
+                        </div>
+                        <!-- Gender -->
+                        <div class="form-group col-md-6">
+                            <label for="gender">Gender:</label>
+                            <select class="form-control" id="gender" name="gender">
+                                <option value="0">Female</option>
+                                <option value="1">Male</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <!-- Smoking -->
+                        <div class="form-group col-md-6">
+                            <label for="smoking">Smoking:</label>
+                            <select class="form-control" id="smoking" name="smoking">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <!-- Hx Smoking -->
+                        <div class="form-group col-md-6">
+                            <label for="hxSmoking">Hx Smoking:</label>
+                            <select class="form-control" id="hxSmoking" name="hxSmoking">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <!-- Hx Radiotherapy -->
+                        <div class="form-group col-md-6">
+                            <label for="hxRadiotherapy">Hx Radiotherapy:</label>
+                            <select class="form-control" id="hxRadiotherapy" name="hxRadiotherapy">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <!-- Thyroid Function -->
+                        <div class="form-group col-md-6">
+                            <label for="thyroidFunction">Thyroid Function:</label>
+                            <select class="form-control" id="thyroidFunction" name="thyroidFunction">
+                                <option value="0">Euthyroid</option>
+                                <option value="1">Clinical Hyperthyroidism</option>
+                                <option value="2">Subclinical Hypothyroidism</option>
+                                <option value="3">Clinical Hypothyroidism</option>
+                                <option value="4">Subclinical Hyperthyroidism</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card-item form-card">
+                    <div class="form-row">
+                        <!-- Physical Examination -->
+                        <div class="form-group col-md-6">
+                            <label for="physicalExam">Physical Examination:</label>
+                            <select class="form-control" id="physicalExam" name="physicalExam">
+                                <option value="0">Multinodular goiter</option>
+                                <option value="1">Single nodular goiter (right)</option>
+                                <option value="2">Single nodular goiter (left)</option>
+                                <option value="3">Normal</option>
+                                <option value="4">Diffuse goiter</option>
+                            </select>
+                        </div>
+                        <!-- Adenopathy -->
+                        <div class="form-group col-md-6">
+                            <label for="adenopathy">Adenopathy:</label>
+                            <select class="form-control" id="adenopathy" name="adenopathy">
+                                <option value="0">No</option>
+                                <option value="1">Right</option>
+                                <option value="2">Left</option>
+                                <option value="3">Extensive</option>
+                                <option value="4">Posterior</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Pathology -->
+                        <div class="form-group col-md-6">
+                            <label for="pathology">Pathology:</label>
+                            <select class="form-control" id="pathology" name="pathology">
+                                <option value="0">Papillary</option>
+                                <option value="1">Micropapillary</option>
+                                <option value="2">Follicular</option>
+                                <option value="3">Hurthel cell</option>
+                            </select>
+                        </div>
+
+                        <!-- Focality -->
+                        <div class="form-group col-md-6">
+                            <label for="focality">Focality:</label>
+                            <select class="form-control" id="focality" name="focality">
+                                <option value="0">Multi-Focal</option>
+                                <option value="1">Uni-Focal</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Risk -->
+                        <div class="form-group col-md-6">
+                            <label for="risk">Risk:</label>
+                            <select class="form-control" id="risk" name="risk">
+                                <option value="2">Low</option>
+                                <option value="1">Intermediate</option>
+                                <option value="0">High</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card-item form-card">
+                    <div class="form-row">
+                        <!-- Tumor -->
+                        <div class="form-group col-md-6">
+                            <label for="t">Tumor:</label>
+                            <select class="form-control" id="t" name="t">
+                                <option value="0">T1b</option>
+                                <option value="1">T2</option>
+                                <option value="2">T3b</option>
+                                <option value="3">T4a</option>
+                                <option value="4">T3a</option>
+                                <option value="5">T1a</option>
+                                <option value="6">T4b</option>
+                            </select>
+                        </div>
+
+                        <!-- Nodes -->
+                        <div class="form-group col-md-6">
+                            <label for="n">Nodes:</label>
+                            <select class="form-control" id="n" name="n">
+                                <option value="0">N0</option>
+                                <option value="1">N1b</option>
+                                <option value="2">N1a</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Metastasis -->
+                        <div class="form-group col-md-6">
+                            <label for="m">Metastasis:</label>
+                            <select class="form-control" id="m" name="m">
+                                <option value="0">M0</option>
+                                <option value="1">M1</option>
+                            </select>
+                        </div>
+
+                        <!-- Stage -->
+                        <div class="form-group col-md-6">
+                            <label for="stage">Stage:</label>
+                            <select class="form-control" id="stage" name="stage">
+                                <option value="0">I</option>
+                                <option value="1">II</option>
+                                <option value="2">III</option>
+                                <option value="3">IVA</option>
+                                <option value="4">IVB</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Response -->
+                        <div class="form-group col-md-6">
+                            <label for="response">Response:</label>
+                            <select class="form-control" id="response" name="response">
+                                <option value="0">Excellent</option>
+                                <option value="1">Structural Incomplete</option>
+                                <option value="2">Indeterminate</option>
+                                <option value="3">Biochemical Incomplete</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col text-center">
+                    <button type="button" class="btn btn-primary" onclick="predict()">Predict</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="predictionResult" class="mt-4 text-center"></div>
+    </div>
+
+    <script>
+        function predict() {
+            // Get input values
+            const age = parseFloat(document.getElementById('age').value);
+            const gender = parseFloat(document.getElementById('gender').value);
+            const smoking = parseFloat(document.getElementById('smoking').value);
+            const hxSmoking = parseFloat(document.getElementById('hxSmoking').value);
+            const hxRadiotherapy = parseFloat(document.getElementById('hxRadiotherapy').value);
+            const focality = parseFloat(document.getElementById('focality').value);
+            const risk = parseFloat(document.getElementById('risk').value);
+            const stage = parseFloat(document.getElementById('stage').value);
+
+            const physicalExam = parseFloat(document.getElementById('physicalExam').value);
+            const Physical_Examination_Multinodular_goiter = (physicalExam === 0) ? 1 : 0;
+            const Physical_Examination_Single_nodular_goiter_right = (physicalExam === 1) ? 1 : 0;
+
+            const thyroidFunction = parseFloat(document.getElementById('thyroidFunction').value);
+
+            const adenopathy = parseFloat(document.getElementById('adenopathy').value);
+            const Adenopathy_Extensive = (adenopathy === 3) ? 1 : 0;
+            const Adenopathy_Left = (adenopathy === 2) ? 1 : 0;
+            const Adenopathy_No = (adenopathy === 0) ? 1 : 0;
+            const Adenopathy_Posterior = (adenopathy === 4) ? 1 : 0;
+            const Adenopathy_Right = (adenopathy === 1) ? 1 : 0;
+
+            const pathology = parseFloat(document.getElementById('pathology').value);
+            const Pathology_Micropapillary = (pathology === 1) ? 1 : 0;
+            const Pathology_Papillary = (pathology === 0) ? 1 : 0;
+
+            const t = parseFloat(document.getElementById('t').value);
+            const n = parseFloat(document.getElementById('n').value);
+            const m = parseFloat(document.getElementById('m').value);
+
+            const response = parseFloat(document.getElementById('response').value);
+            const Response_Excellent = (response === 0) ? 1 : 0;
+            const Response_Indeterminate = (response === 2) ? 1 : 0;
+            const Response_Structural_Incomplete = (response === 1) ? 1 : 0;
+
+            // Prepare data object
+            const data = {
+                features: [
+                    age, gender, smoking, hxSmoking, hxRadiotherapy, focality,
+                    risk, stage, Physical_Examination_Multinodular_goiter,
+                    Physical_Examination_Single_nodular_goiter_right,
+                    Adenopathy_Extensive, Adenopathy_Left, Adenopathy_No,
+                    Adenopathy_Posterior, Adenopathy_Right, Pathology_Micropapillary,
+                    Pathology_Papillary, Response_Excellent, Response_Indeterminate,
+                    Response_Structural_Incomplete
+                ]
+            };
+
+            // Send POST request to Flask server
+            axios.post('http://localhost:5000/predict', data)
+                .then(function (response) {
+                    // Handle success and update the result
+                    console.log(response.data);
+                    //document.getElementById('predictionResult').innerText = `Prediction: ${response.data.prediction}`;
+                    const predictionResult = document.getElementById('predictionResult');
+                    if (response.data.prediction === 1) {
+                        predictionResult.innerHTML = `<span class="text-recurred">RECURRED</span>`;
+                    } else {
+                        predictionResult.innerHTML = `<span class="text-not-recurred">NOT RECURRED</span>`;
+                    }
+                })
+                .catch(function (error) {
+                    // Handle error and display error message
+                    console.error(error);
+                    document.getElementById('predictionResult').innerText = 'Prediction error';
+                });
+        }
+    </script>
+</body>
+
+</html>
